@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-# TODO для создания баз прописать свой вариант
-export VARIANT="<variant>"
-export SCRIPT_PATH=/docker-entrypoint-initdb.d/
+# Varyanta uygun olarak veritabanlarını oluştur
+export SCRIPT_PATH=/docker-entrypoint-initdb.d/scripts/
 export PGPASSWORD=postgres
-psql -f "$SCRIPT_PATH/scripts/db-$VARIANT.sql"
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+    \i '${SCRIPT_PATH}db-v3.sql';
+EOSQL
